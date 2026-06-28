@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#080C18">
+
+    <!-- ══════════════════════════════════════════════════════
+         STATUS BAR
+         ══════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="6dp"
+        android:gravity="center_vertical"
+        android:background="#050810">
+
+        <!-- Mode badge -->
+        <TextView
+            android:id="@+id/tvModeBadge"
+            android:layout_width="52dp"
+            android:layout_height="22dp"
+            android:text="CMD"
+            android:textColor="#AA44FF"
+            android:textSize="9sp"
+            android:fontFamily="monospace"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="@drawable/mode_cmd_bg"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- Hawk eye dot -->
+        <View
+            android:id="@+id/vHawkDot"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/dot_green" />
+
+        <!-- Status text -->
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="HAWK AI  ·  READY"
+            android:textColor="#00FF88"
+            android:textSize="9sp"
+            android:fontFamily="monospace"
+            android:singleLine="true"
+            android:ellipsize="end" />
+
+        <!-- Model selector -->
+        <TextView
+            android:id="@+id/btnModelToggle"
+            android:layout_width="44dp"
+            android:layout_height="22dp"
+            android:text="LOCAL"
+            android:textColor="#00AAFF"
+            android:textSize="8sp"
+            android:fontFamily="monospace"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="@drawable/key_special"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- Toolbar expand chevron -->
+        <TextView
+            android:id="@+id/btnToolbar"
+            android:layout_width="30dp"
+            android:layout_height="22dp"
+            android:text="⌂"
+            android:textColor="#445577"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_marginStart="4dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+    <!-- ══════════════════════════════════════════════════════
+         TOOLBAR (collapsed by default)
+         ══════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:gravity="center_vertical"
+        android:background="#030609"
+        android:visibility="gone">
+
+        <!-- Clipboard tool -->
+        <LinearLayout
+            android:id="@+id/toolClip"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@drawable/toolbar_item_bg"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="📋" android:textSize="14sp" android:gravity="center" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="CLIP" android:textColor="#4488AA" android:textSize="7sp"
+                android:fontFamily="monospace" />
+        </LinearLayout>
+
+        <!-- Debug tool -->
+        <LinearLayout
+            android:id="@+id/toolDebug"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@drawable/toolbar_item_bg"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="🔧" android:textSize="14sp" android:gravity="center" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="DEBUG" android:textColor="#4488AA" android:textSize="7sp"
+                android:fontFamily="monospace" />
+        </LinearLayout>
+
+        <!-- Log tool -->
+        <LinearLayout
+            android:id="@+id/toolLog"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@drawable/toolbar_item_bg"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="📜" android:textSize="14sp" android:gravity="center" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="LOG" android:textColor="#4488AA" android:textSize="7sp"
+                android:fontFamily="monospace" />
+        </LinearLayout>
+
+        <!-- Diagnose tool -->
+        <LinearLayout
+            android:id="@+id/toolDiagnose"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@drawable/toolbar_item_bg"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="🩺" android:textSize="14sp" android:gravity="center" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="DIAG" android:textColor="#4488AA" android:textSize="7sp"
+                android:fontFamily="monospace" />
+        </LinearLayout>
+
+        <!-- Clear log -->
+        <LinearLayout
+            android:id="@+id/toolClear"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@drawable/toolbar_item_bg"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="🗑" android:textSize="14sp" android:gravity="center" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="CLEAR" android:textColor="#4488AA" android:textSize="7sp"
+                android:fontFamily="monospace" />
+        </LinearLayout>
+
+        <!-- Stop / kill agent -->
+        <LinearLayout
+            android:id="@+id/toolStop"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@drawable/toolbar_item_bg"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="■" android:textColor="#FF4444" android:textSize="14sp"
+                android:gravity="center" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="STOP" android:textColor="#884444" android:textSize="7sp"
+                android:fontFamily="monospace" />
+        </LinearLayout>
+
+        <!-- Memory panel toggle -->
+        <LinearLayout
+            android:id="@+id/toolMemory"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@drawable/toolbar_item_bg"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="💾" android:textSize="12sp" android:gravity="center" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="MEM" android:textColor="#226688" android:textSize="7sp"
+                android:fontFamily="monospace" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- ══════════════════════════════════════════════════════
+         PANEL AREA (log / clipboard / debug — only one shown)
+         ══════════════════════════════════════════════════════ -->
+
+    <!-- LOG PANEL -->
+    <ScrollView
+        android:id="@+id/panelLog"
+        android:layout_width="match_parent"
+        android:layout_height="88dp"
+        android:background="@drawable/panel_bg"
+        android:visibility="gone"
+        android:fillViewport="true">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp">
+            <TextView
+                android:id="@+id/tvLog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#4A6688"
+                android:textSize="8.5sp"
+                android:fontFamily="monospace"
+                android:text="No log entries yet." />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- CLIPBOARD PANEL -->
+    <LinearLayout
+        android:id="@+id/panelClip"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="88dp"
+        android:background="@drawable/panel_bg"
+        android:visibility="gone"
+        android:padding="4dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CLIPBOARD HISTORY — tap to paste"
+            android:textColor="#224466"
+            android:textSize="7sp"
+            android:fontFamily="monospace"
+            android:paddingBottom="3dp" />
+
+        <ScrollView android:layout_width="match_parent" android:layout_height="0dp"
+            android:layout_weight="1">
+            <LinearLayout
+                android:id="@+id/clipList"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </ScrollView>
+
+    </LinearLayout>
+
+    <!-- DEBUG PANEL -->
+    <ScrollView
+        android:id="@+id/panelDebug"
+        android:layout_width="match_parent"
+        android:layout_height="88dp"
+        android:background="@drawable/panel_bg"
+        android:visibility="gone"
+        android:fillViewport="true">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Debug toolbar row -->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:background="#030508"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:gravity="center_vertical">
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="DEBUG" android:textColor="#334466" android:textSize="7sp"
+                    android:fontFamily="monospace" android:layout_weight="1" />
+
+                <TextView android:id="@+id/tvDebugCopy"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="COPY LOG" android:textColor="#0055AA" android:textSize="7sp"
+                    android:fontFamily="monospace" android:paddingEnd="8dp"
+                    android:clickable="true" android:focusable="true" />
+
+                <TextView android:id="@+id/tvDebugClear"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="CLEAR" android:textColor="#660033" android:textSize="7sp"
+                    android:fontFamily="monospace"
+                    android:clickable="true" android:focusable="true" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvDebugLog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="6dp"
+                android:textSize="8sp"
+                android:fontFamily="monospace"
+                android:text="Debug entries will appear here." />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- MEMORY PANEL — shows HawkMemory entries, tap to paste, long-press to delete -->
+    <LinearLayout
+        android:id="@+id/panelMemory"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="92dp"
+        android:background="@drawable/panel_bg"
+        android:visibility="gone"
+        android:padding="4dp">
+
+        <!-- Header row -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="18dp"
+            android:gravity="center_vertical">
+
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="MEMORY — tap=paste  long=delete  cloud=Drive+Sheets"
+                android:textColor="#224466" android:textSize="6.5sp"
+                android:fontFamily="monospace" />
+
+            <TextView android:id="@+id/tvMemClear"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="CLEAR ALL" android:textColor="#660022" android:textSize="6.5sp"
+                android:fontFamily="monospace" android:paddingStart="6dp"
+                android:clickable="true" android:focusable="true" />
+        </LinearLayout>
+
+        <!-- Quick add input -->
+        <LinearLayout android:orientation="horizontal"
+            android:layout_width="match_parent" android:layout_height="22dp"
+            android:layout_marginTop="2dp" android:gravity="center_vertical">
+            <EditText android:id="@+id/etNewMem"
+                android:layout_width="0dp" android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="Add memory…" android:textColorHint="#1A3344"
+                android:textColor="#7ABCDD" android:textSize="9sp"
+                android:fontFamily="monospace" android:paddingStart="6dp"
+                android:background="@drawable/input_bg" android:inputType="text"
+                android:singleLine="true" android:maxLines="1" />
+            <TextView android:id="@+id/btnMemSave"
+                android:layout_width="32dp" android:layout_height="match_parent"
+                android:text="+" android:textColor="#00CCAA" android:textSize="16sp"
+                android:gravity="center" android:layout_marginStart="3dp"
+                android:background="@drawable/key_action"
+                android:clickable="true" android:focusable="true" />
+        </LinearLayout>
+
+        <!-- Scrollable memory list -->
+        <ScrollView android:layout_width="match_parent" android:layout_height="0dp"
+            android:layout_weight="1" android:layout_marginTop="2dp">
+            <LinearLayout android:id="@+id/memList"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </ScrollView>
+
+    </LinearLayout>
+
+    <!-- ══════════════════════════════════════════════════════
+         COMMAND INPUT BAR (CMD mode only)
+         ══════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/cmdBar"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:background="#050810"
+        android:gravity="center_vertical"
+        android:visibility="visible">
+
+        <EditText
+            android:id="@+id/etCommand"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:hint="Enter AI task command…"
+            android:textColorHint="#223350"
+            android:textColor="#AACCFF"
+            android:textSize="12sp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:background="@drawable/input_bg"
+            android:inputType="text"
+            android:imeOptions="actionSend"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:fontFamily="monospace" />
+
+        <TextView
+            android:id="@+id/btnRun"
+            android:layout_width="42dp"
+            android:layout_height="36dp"
+            android:text="▶"
+            android:textSize="16sp"
+            android:textColor="#00FF88"
+            android:gravity="center"
+            android:layout_marginStart="4dp"
+            android:background="@drawable/key_action"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+    <!-- ══════════════════════════════════════════════════════
+         QWERTY KEY ROWS
+         ══════════════════════════════════════════════════════ -->
+
+    <!-- Row 1: Q W E R T Y U I O P -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:paddingStart="3dp"
+        android:paddingEnd="3dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="1dp"
+        android:gravity="center_vertical">
+
+        <TextView android:id="@+id/kQ" style="@style/HawkKey" android:text="q" />
+        <TextView android:id="@+id/kW" style="@style/HawkKey" android:text="w" />
+        <TextView android:id="@+id/kE" style="@style/HawkKey" android:text="e" />
+        <TextView android:id="@+id/kR" style="@style/HawkKey" android:text="r" />
+        <TextView android:id="@+id/kT" style="@style/HawkKey" android:text="t" />
+        <TextView android:id="@+id/kY" style="@style/HawkKey" android:text="y" />
+        <TextView android:id="@+id/kU" style="@style/HawkKey" android:text="u" />
+        <TextView android:id="@+id/kI" style="@style/HawkKey" android:text="i" />
+        <TextView android:id="@+id/kO" style="@style/HawkKey" android:text="o" />
+        <TextView android:id="@+id/kP" style="@style/HawkKey" android:text="p" />
+
+    </LinearLayout>
+
+    <!-- Row 2: A S D F G H J K L -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingTop="1dp"
+        android:paddingBottom="1dp"
+        android:gravity="center_vertical">
+
+        <TextView android:id="@+id/kA" style="@style/HawkKey" android:text="a" />
+        <TextView android:id="@+id/kS" style="@style/HawkKey" android:text="s" />
+        <TextView android:id="@+id/kD" style="@style/HawkKey" android:text="d" />
+        <TextView android:id="@+id/kF" style="@style/HawkKey" android:text="f" />
+        <TextView android:id="@+id/kG" style="@style/HawkKey" android:text="g" />
+        <TextView android:id="@+id/kH" style="@style/HawkKey" android:text="h" />
+        <TextView android:id="@+id/kJ" style="@style/HawkKey" android:text="j" />
+        <TextView android:id="@+id/kK" style="@style/HawkKey" android:text="k" />
+        <TextView android:id="@+id/kL" style="@style/HawkKey" android:text="l" />
+
+    </LinearLayout>
+
+    <!-- Row 3: CAPS  Z X C V B N M  DEL -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:paddingStart="3dp"
+        android:paddingEnd="3dp"
+        android:paddingTop="1dp"
+        android:paddingBottom="1dp"
+        android:gravity="center_vertical">
+
+        <!-- CAPS LOCK -->
+        <TextView
+            android:id="@+id/kCaps"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.6"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            android:text="⇪"
+            android:textColor="#667788"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:background="@drawable/key_special"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView android:id="@+id/kZ" style="@style/HawkKey" android:text="z" />
+        <TextView android:id="@+id/kX" style="@style/HawkKey" android:text="x" />
+        <TextView android:id="@+id/kC" style="@style/HawkKey" android:text="c" />
+        <TextView android:id="@+id/kV" style="@style/HawkKey" android:text="v" />
+        <TextView android:id="@+id/kB" style="@style/HawkKey" android:text="b" />
+        <TextView android:id="@+id/kN" style="@style/HawkKey" android:text="n" />
+        <TextView android:id="@+id/kM" style="@style/HawkKey" android:text="m" />
+
+        <!-- DEL -->
+        <TextView
+            android:id="@+id/kDel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.6"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            android:text="⌫"
+            android:textColor="#AA4444"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:background="@drawable/key_special"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+    <!-- Row 4: ?123  SPACE  .  SEND -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:paddingStart="3dp"
+        android:paddingEnd="3dp"
+        android:paddingTop="1dp"
+        android:paddingBottom="3dp"
+        android:gravity="center_vertical">
+
+        <!-- MEM key — tap opens memory panel, long-press to add memory -->
+        <TextView
+            android:id="@+id/kMemo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            android:text="MEM"
+            android:textColor="#44BBDD"
+            android:textSize="8sp"
+            android:fontFamily="monospace"
+            android:gravity="center"
+            android:background="@drawable/key_special"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- Comma -->
+        <TextView
+            android:id="@+id/kComma"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            android:text=","
+            android:textColor="#8899AA"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:background="@drawable/key_normal"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- SPACE -->
+        <TextView
+            android:id="@+id/kSpace"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            android:text="SPACE"
+            android:textColor="#3A4A60"
+            android:textSize="9sp"
+            android:fontFamily="monospace"
+            android:gravity="center"
+            android:background="@drawable/key_normal"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- Period -->
+        <TextView
+            android:id="@+id/kPeriod"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            android:text="."
+            android:textColor="#8899AA"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:background="@drawable/key_normal"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- ENTER / SEND -->
+        <TextView
+            android:id="@+id/kEnter"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.8"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            android:text="⏎"
+            android:textColor="#00FF88"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:background="@drawable/key_action"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+</LinearLayout>
