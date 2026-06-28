@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/overlay_bg"
+    android:padding="6dp"
+    android:gravity="center_vertical"
+    android:elevation="8dp">
+
+    <!-- Hawk indicator dot -->
+    <View
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:background="@drawable/dot_green"
+        android:layout_marginEnd="6dp" />
+
+    <!-- Step counter -->
+    <TextView
+        android:id="@+id/ovStep"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#00FF88"
+        android:textSize="10sp"
+        android:fontFamily="monospace"
+        android:textStyle="bold"
+        android:layout_marginEnd="6dp"
+        android:text="" />
+
+    <!-- Status text -->
+    <TextView
+        android:id="@+id/ovStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="160dp"
+        android:textColor="#DDEEFF"
+        android:textSize="10sp"
+        android:fontFamily="monospace"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:text="Ready" />
+
+    <!-- Stop button -->
+    <TextView
+        android:id="@+id/ovStop"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:text="■"
+        android:textColor="#FF4444"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/btn_stop_bg"
+        android:clickable="true"
+        android:focusable="true" />
+
+</LinearLayout>
