@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1A1A2E">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="KEYBOARD HAWK"
+            android:textSize="26sp"
+            android:textColor="#00FF88"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.15"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Autonomous AI Agent"
+            android:textSize="13sp"
+            android:textColor="#556688"
+            android:layout_marginBottom="28dp" />
+
+        <TextView
+            android:id="@+id/tvSetupStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:background="#0D0D1A"
+            android:textColor="#AABBCC"
+            android:textSize="13sp"
+            android:fontFamily="monospace"
+            android:lineSpacingExtra="4dp"
+            android:layout_marginBottom="24dp"
+            android:text="Checking status..." />
+
+        <Button
+            android:id="@+id/btnEnableAccessibility"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="1. Enable Accessibility Service"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#0F3460"
+            android:layout_marginBottom="10dp" />
+
+        <Button
+            android:id="@+id/btnEnableKeyboard"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="2. Enable Keyboard Hawk"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#0F3460"
+            android:layout_marginBottom="10dp" />
+
+        <Button
+            android:id="@+id/btnSelectKeyboard"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="3. Switch to Keyboard Hawk"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#164A2A"
+            android:layout_marginBottom="28dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="HOW TO USE"
+            android:textSize="11sp"
+            android:textColor="#445566"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1. Complete the 3 setup steps above\n2. Open any app on your device\n3. Tap any text field\n4. Keyboard Hawk appears at the bottom\n5. Type your command and press ▶\n6. Watch it work autonomously\n7. Press ■ to stop at any time"
+            android:textColor="#667788"
+            android:textSize="13sp"
+            android:lineSpacingExtra="5dp" />
+
+    </LinearLayout>
+</ScrollView>
