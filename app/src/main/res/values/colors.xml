@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">#1A1A2E</color>
+    <color name="hawk_green">#00FF88</color>
+    <color name="hawk_bg">#1A1A2E</color>
+    <color name="hawk_dark">#0D0D1A</color>
+    <color name="hawk_blue">#0F3460</color>
+</resources>
