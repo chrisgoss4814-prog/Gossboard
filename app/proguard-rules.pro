@@ -1,0 +1,3 @@
+-keep class com.keyboardhawk.app.** { *; }
+-dontwarn okhttp3.**
+-keep class okhttp3.** { *; }
