@@ -134,7 +134,7 @@ class KeyboardHawkIME : InputMethodService() {
 
     override fun onDestroy() {
         super.onDestroy()
-        clipListener?.let { clipManager?.removeOnPrimaryClipChangedListener(it) }
+        clipListener?.let { clipManager?.removePrimaryClipChangedListener(it) }
         instance = null
     }
 
@@ -252,7 +252,7 @@ class KeyboardHawkIME : InputMethodService() {
                 }
             }
         }
-        clipManager?.addOnPrimaryClipChangedListener(clipListener!!)
+        clipManager?.addPrimaryClipChangedListener(clipListener!!)
     }
 
     private fun refreshClipPanel() {
