@@ -640,7 +640,7 @@
                 android:layout_weight="1.6"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
-                android:text="&#63;123"
+                android:text="@string/key_num_toggle"
                 android:textColor="#44BBDD"
                 android:textSize="10sp"
                 android:fontFamily="monospace"
