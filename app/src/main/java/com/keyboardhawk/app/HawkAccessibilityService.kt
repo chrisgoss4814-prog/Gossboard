@@ -38,6 +38,8 @@ class HawkAccessibilityService : AccessibilityService() {
         var instance: HawkAccessibilityService? = null
         const val PREFS_NAME = "hawk_prefs"
         const val PREF_GROQ_KEY = "groq_api_key"
+        const val PREF_LLAMA_URL = "llama_url"
+        const val DEFAULT_LLAMA_URL = ""
         const val TAG = "HawkAI"
         val debugLog = StringBuilder()
         const val MODEL_LOCAL = "local"
@@ -87,7 +89,13 @@ class HawkAccessibilityService : AccessibilityService() {
 
     var isRunning = false
     private var currentTaskId = 0
-    private var cachedAiUrl = "https://hawk-proxyout.onrender.com"
+    private var cachedAiUrl = ""
+
+    private fun loadPersistedUrl() {
+        val saved = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getString(PREF_LLAMA_URL, "") ?: ""
+        if (saved.isNotBlank()) cachedAiUrl = saved
+    }
 
     // ── HYBRID AI STATE ───────────────────────────────────────────
     // Groq = planner/interpreter (3 calls max per task)
@@ -151,7 +159,12 @@ class HawkAccessibilityService : AccessibilityService() {
     // ── DEBUG ─────────────────────────────────────────────────────
 
     fun getAiUrl(): String = cachedAiUrl
-    fun updateAiUrl(url: String) { cachedAiUrl = url; debug("SERVICE", "AI URL → $url") }
+    fun updateAiUrl(url: String) {
+        cachedAiUrl = url
+        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit().putString(PREF_LLAMA_URL, url).apply()
+        debug("SERVICE", "Llama URL → $url")
+    }
 
     // Level-aware debug — routes to both the raw log and the IME's color-coded debug panel.
     // Stage prefixes that trigger elevated levels:
@@ -193,7 +206,8 @@ class HawkAccessibilityService : AccessibilityService() {
 
     override fun onServiceConnected() {
         instance = this
-        debug("SERVICE", "Hawk AI Connected ✓")
+        loadPersistedUrl()
+        debug("SERVICE", "Hawk AI Connected ✓ | Llama URL: ${if (cachedAiUrl.isBlank()) "not set" else cachedAiUrl}")
         handler.post { KeyboardHawkIME.instance?.updateStatus("Hawk AI Ready") }
     }
 
@@ -583,10 +597,9 @@ class HawkAccessibilityService : AccessibilityService() {
                 }
             }
 
-            val execLabel = if (currentModel != MODEL_LOCAL) "Groq ▶" else "Llama ▶"
             handler.post {
-                KeyboardHawkIME.instance?.updateStatus("$status — $execLabel")
-                updateOverlay("$execLabel", step, MAX_STEPS)
+                KeyboardHawkIME.instance?.updateStatus("$status — Llama ▶")
+                updateOverlay("Llama ▶", step, MAX_STEPS)
             }
 
             // EXECUTE: Llama picks the next action
@@ -821,23 +834,24 @@ SELF-KNOWLEDGE:
         callAI(GROQ_URL, model, true, systemPrompt, "Proceed.", maxTokens, 0.3, callback)
     }
 
-    // Action executor — uses Groq when model is FAST/SMART, Llama when LOCAL
+    // Action executor — Llama always executes; Groq only plans/re-plans (saves tokens)
     private fun callLlamaForAction(
         systemPrompt: String,
         screenJson: String,
         step: Int,
         callback: (JSONObject) -> Unit
     ) {
+        val llamaUrl = getAiUrl()
+        if (llamaUrl.isBlank()) {
+            debug("LLAMA-ERR", "Llama URL not set — open keyboard toolbar → ⚙ KEY → paste your ngrok URL")
+            handler.post { callback(JSONObject().put("action", "wait")) }
+            return
+        }
         val userContent = "Step $step. Screen:\n${screenJson.take(3500)}"
-        val useGroqExec = currentModel != MODEL_LOCAL
-        val execUrl     = if (useGroqExec) GROQ_URL else "${getAiUrl()}/v1/chat/completions"
-        val execModel   = if (useGroqExec)
-                              if (currentModel == MODEL_FAST) MODEL_FAST else MODEL_SMART
-                          else "llama-3.1-8b-instruct"
-        val tokens      = if (useGroqExec) 150 else 80
-        callAI(execUrl, execModel, useGroqExec, systemPrompt, userContent, tokens, 0.05) { content ->
+        callAI("$llamaUrl/v1/chat/completions", "llama-3.1-8b-instruct", false,
+               systemPrompt, userContent, 80, 0.05) { content ->
             val action = if (content != null) {
-                debug(if (useGroqExec) "GROQ-EX" else "LLAMA", content.take(120))
+                debug("LLAMA", content.take(120))
                 parseAction(content)
             } else {
                 JSONObject().put("action", "wait")
