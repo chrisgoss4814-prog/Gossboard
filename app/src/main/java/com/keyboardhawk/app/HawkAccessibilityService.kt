@@ -36,8 +36,8 @@ class HawkAccessibilityService : AccessibilityService() {
 
     companion object {
         var instance: HawkAccessibilityService? = null
-        // Groq API key — paste your full key here
-        const val API_KEY = "gsk_PASTE_YOUR_GROQ_KEY_HERE"
+        const val PREFS_NAME = "hawk_prefs"
+        const val PREF_GROQ_KEY = "groq_api_key"
         const val TAG = "HawkAI"
         val debugLog = StringBuilder()
         const val MODEL_LOCAL = "local"
@@ -55,6 +55,10 @@ class HawkAccessibilityService : AccessibilityService() {
         const val PLANNER_MAX_NODES   = 160   // nodes sent to Groq planner (richer view)
         const val OVERLAY_TAG = "HawkOverlay"
     }
+
+    private fun getApiKey(): String =
+        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getString(PREF_GROQ_KEY, "") ?: ""
 
     private val handler = Handler(Looper.getMainLooper())
     private val client = OkHttpClient.Builder()
@@ -765,7 +769,7 @@ SELF-KNOWLEDGE:
         val req = Request.Builder().url(url)
             .post(body.toString().toRequestBody("application/json".toMediaType()))
             .addHeader("Content-Type", "application/json")
-            .also { if (useGroqAuth) it.addHeader("Authorization", "Bearer $API_KEY") }
+            .also { if (useGroqAuth) it.addHeader("Authorization", "Bearer ${getApiKey()}") }
             .build()
         client.newCall(req).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
