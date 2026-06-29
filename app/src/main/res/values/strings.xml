@@ -3,4 +3,5 @@
     <string name="app_name">Keyboard Hawk</string>
     <string name="ime_name">Keyboard Hawk</string>
     <string name="accessibility_service_description">Hawk AI reads the screen and performs taps, scrolls, and typing to complete tasks autonomously.</string>
+    <string name="key_num_toggle">\?123</string>
 </resources>
