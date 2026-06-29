@@ -35,7 +35,7 @@ class KeyboardHawkIME : InputMethodService() {
 
     // ── Enums ─────────────────────────────────────────────────────
     enum class Mode { COMMAND, CHAT }
-    enum class Panel { NONE, LOG, CLIPBOARD, DEBUG, MEMORY }
+    enum class Panel { NONE, LOG, CLIPBOARD, DEBUG, MEMORY, SETTINGS }
 
     // ── State ─────────────────────────────────────────────────────
     private val handler = Handler(Looper.getMainLooper())
@@ -91,9 +91,17 @@ class KeyboardHawkIME : InputMethodService() {
     private var kDel: TextView? = null
     private var kSpace: TextView? = null
     private var kEnter: TextView? = null
-    private var kMemo: TextView? = null
     private var kComma: TextView? = null
     private var kPeriod: TextView? = null
+    private var kNumToggle: TextView? = null
+    private var kLetterToggle: TextView? = null
+    private var kNSpace: TextView? = null
+    private var kNEnter: TextView? = null
+    private var layoutLetters: LinearLayout? = null
+    private var layoutNumbers: LinearLayout? = null
+    private var panelSettings: LinearLayout? = null
+    private var etApiKey: android.widget.EditText? = null
+    private var showingNumbers = false
 
     // Letter → view id map
     private val letterIds = mapOf(
@@ -163,9 +171,20 @@ class KeyboardHawkIME : InputMethodService() {
         kDel = v.findViewById(R.id.kDel)
         kSpace = v.findViewById(R.id.kSpace)
         kEnter = v.findViewById(R.id.kEnter)
-        kMemo = v.findViewById(R.id.kMemo)
         kComma = v.findViewById(R.id.kComma)
         kPeriod = v.findViewById(R.id.kPeriod)
+        kNumToggle = v.findViewById(R.id.kNumToggle)
+        kLetterToggle = v.findViewById(R.id.kLetterToggle)
+        kNSpace = v.findViewById(R.id.kNSpace)
+        kNEnter = v.findViewById(R.id.kNEnter)
+        layoutLetters = v.findViewById(R.id.layoutLetters)
+        layoutNumbers = v.findViewById(R.id.layoutNumbers)
+        panelSettings = v.findViewById(R.id.panelSettings)
+        etApiKey = v.findViewById(R.id.etApiKey)
+
+        // Pre-fill the API key field with whatever is stored
+        val prefs = getSharedPreferences(HawkAccessibilityService.PREFS_NAME, Context.MODE_PRIVATE)
+        etApiKey?.setText(prefs.getString(HawkAccessibilityService.PREF_GROQ_KEY, "") ?: "")
 
         // Bind all letter keys
         for ((letter, resId) in letterIds) {
@@ -196,6 +215,7 @@ class KeyboardHawkIME : InputMethodService() {
         v.findViewById<View>(R.id.toolClear).setOnClickListener { clearAll() }
         v.findViewById<View>(R.id.toolStop).setOnClickListener { stopTask() }
         v.findViewById<View>(R.id.toolMemory).setOnClickListener { togglePanel(Panel.MEMORY) }
+        v.findViewById<View>(R.id.toolSettings).setOnClickListener { togglePanel(Panel.SETTINGS) }
 
         // Memory panel controls
         panelMemory = v.findViewById(R.id.panelMemory)
@@ -206,6 +226,9 @@ class KeyboardHawkIME : InputMethodService() {
         // Debug panel buttons
         v.findViewById<TextView>(R.id.tvDebugCopy).setOnClickListener { copyDebugLog() }
         v.findViewById<TextView>(R.id.tvDebugClear).setOnClickListener { clearDebugLog() }
+
+        // Settings panel
+        v.findViewById<View>(R.id.btnSaveKey).setOnClickListener { saveApiKey() }
 
         // CMD bar
         v.findViewById<View>(R.id.btnRun).setOnClickListener { runCommand() }
@@ -221,17 +244,24 @@ class KeyboardHawkIME : InputMethodService() {
             tv.setOnClickListener { typeChar(letter) }
         }
 
-        // Special keys
+        // QWERTY special keys
         kCaps?.setOnClickListener { toggleCaps() }
         kDel?.setOnClickListener { pressDelete() }
         kDel?.setOnLongClickListener { deleteWord(); true }
         kSpace?.setOnClickListener { typeChar(" ") }
         kComma?.setOnClickListener { typeChar(",") }
         kPeriod?.setOnClickListener { typeChar(".") }
-        kMemo?.setOnClickListener { togglePanel(Panel.MEMORY) }
-        kMemo?.setOnLongClickListener { promptAddMemory(); true }
         kEnter?.setOnClickListener { pressEnter() }
         kEnter?.setOnLongClickListener { runCommand(); true }
+
+        // Number layout toggle keys
+        kNumToggle?.setOnClickListener { toggleNumberLayout(true) }
+        kLetterToggle?.setOnClickListener { toggleNumberLayout(false) }
+        kNSpace?.setOnClickListener { typeChar(" ") }
+        kNEnter?.setOnClickListener { pressEnter() }
+
+        // Bind all generic number/symbol keys
+        layoutNumbers?.let { bindNumberKeys(it) }
     }
 
     // ══════════════════════════════════════════════════════════════
@@ -346,17 +376,45 @@ class KeyboardHawkIME : InputMethodService() {
 
     private fun togglePanel(panel: Panel) {
         activePanel = if (activePanel == panel) Panel.NONE else panel
-        panelLog?.visibility    = View.GONE
-        panelClip?.visibility   = View.GONE
-        panelDebug?.visibility  = View.GONE
-        panelMemory?.visibility = View.GONE
+        panelLog?.visibility      = View.GONE
+        panelClip?.visibility     = View.GONE
+        panelDebug?.visibility    = View.GONE
+        panelMemory?.visibility   = View.GONE
+        panelSettings?.visibility = View.GONE
         when (activePanel) {
-            Panel.LOG       -> { panelLog?.visibility    = View.VISIBLE; scrollLogToBottom() }
-            Panel.CLIPBOARD -> { panelClip?.visibility   = View.VISIBLE; refreshClipPanel() }
-            Panel.DEBUG     -> { panelDebug?.visibility  = View.VISIBLE; scrollDebugToBottom() }
-            Panel.MEMORY    -> { panelMemory?.visibility = View.VISIBLE; refreshMemoryPanel() }
+            Panel.LOG       -> { panelLog?.visibility      = View.VISIBLE; scrollLogToBottom() }
+            Panel.CLIPBOARD -> { panelClip?.visibility     = View.VISIBLE; refreshClipPanel() }
+            Panel.DEBUG     -> { panelDebug?.visibility    = View.VISIBLE; scrollDebugToBottom() }
+            Panel.MEMORY    -> { panelMemory?.visibility   = View.VISIBLE; refreshMemoryPanel() }
+            Panel.SETTINGS  -> { panelSettings?.visibility = View.VISIBLE }
             Panel.NONE      -> {}
         }
+    }
+
+    private fun toggleNumberLayout(showNumbers: Boolean) {
+        showingNumbers = showNumbers
+        layoutLetters?.visibility = if (showNumbers) View.GONE else View.VISIBLE
+        layoutNumbers?.visibility = if (showNumbers) View.VISIBLE else View.GONE
+    }
+
+    private fun bindNumberKeys(numLayout: LinearLayout) {
+        for (i in 0 until numLayout.childCount) {
+            val row = numLayout.getChildAt(i) as? LinearLayout ?: continue
+            for (j in 0 until row.childCount) {
+                val key = row.getChildAt(j) as? TextView ?: continue
+                if (key.tag == "numkey") {
+                    key.setOnClickListener { typeChar((it as TextView).text.toString()) }
+                }
+            }
+        }
+    }
+
+    private fun saveApiKey() {
+        val key = etApiKey?.text?.toString()?.trim() ?: return
+        getSharedPreferences(HawkAccessibilityService.PREFS_NAME, Context.MODE_PRIVATE)
+            .edit().putString(HawkAccessibilityService.PREF_GROQ_KEY, key).apply()
+        updateStatus("API key saved ✓")
+        togglePanel(Panel.NONE)
     }
 
     // ══════════════════════════════════════════════════════════════
@@ -473,8 +531,7 @@ class KeyboardHawkIME : InputMethodService() {
 
     private fun toggleSymbols() {
         isSymbols = !isSymbols
-        kMemo?.text = if (isSymbols) "ABC" else "MEM"
-        kMemo?.setTextColor(
+        kNumToggle?.setTextColor(
             Color.parseColor(if (isSymbols) "#00CCFF" else "#44BBDD")
         )
         if (isSymbols) {
