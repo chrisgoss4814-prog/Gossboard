@@ -30,6 +30,8 @@ jobs:
           chmod +x gradlew
 
       - name: Build Debug APK
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: ./gradlew assembleDebug --stacktrace
 
       - name: Upload APK
