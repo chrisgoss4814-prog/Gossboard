@@ -35,7 +35,7 @@ class KeyboardHawkIME : InputMethodService() {
 
     // ── Enums ─────────────────────────────────────────────────────
     enum class Mode { COMMAND, CHAT }
-    enum class Panel { NONE, LOG, CLIPBOARD, DEBUG, MEMORY, SETTINGS }
+    enum class Panel { NONE, LOG, CLIPBOARD, DEBUG, MEMORY, SETTINGS, CHAT }
 
     // ── State ─────────────────────────────────────────────────────
     private val handler = Handler(Looper.getMainLooper())
@@ -102,6 +102,15 @@ class KeyboardHawkIME : InputMethodService() {
     private var panelSettings: LinearLayout? = null
     private var etApiKey: android.widget.EditText? = null
     private var showingNumbers = false
+
+    // Chat panel
+    private var panelChat: LinearLayout? = null
+    private var tvChatLog: TextView? = null
+    private var etChatInput: EditText? = null
+    private var btnChatSend: TextView? = null
+    private var btnChatToggle: TextView? = null
+    private var chatUseGroq = true
+    private val chatHistory = StringBuilder()
 
     // Letter → view id map
     private val letterIds = mapOf(
@@ -182,9 +191,24 @@ class KeyboardHawkIME : InputMethodService() {
         panelSettings = v.findViewById(R.id.panelSettings)
         etApiKey = v.findViewById(R.id.etApiKey)
 
-        // Pre-fill the API key field with whatever is stored
+        // Pre-fill the API key field; auto-seed prefs from BuildConfig if empty
         val prefs = getSharedPreferences(HawkAccessibilityService.PREFS_NAME, Context.MODE_PRIVATE)
-        etApiKey?.setText(prefs.getString(HawkAccessibilityService.PREF_GROQ_KEY, "") ?: "")
+        var storedKey = prefs.getString(HawkAccessibilityService.PREF_GROQ_KEY, "") ?: ""
+        if (storedKey.isBlank()) {
+            val built = BuildConfig.GROQ_API_KEY
+            if (built.isNotBlank()) {
+                storedKey = built
+                prefs.edit().putString(HawkAccessibilityService.PREF_GROQ_KEY, built).apply()
+            }
+        }
+        etApiKey?.setText(storedKey)
+
+        // Chat panel
+        panelChat    = v.findViewById(R.id.panelChat)
+        tvChatLog    = v.findViewById(R.id.tvChatLog)
+        etChatInput  = v.findViewById(R.id.etChatInput)
+        btnChatSend  = v.findViewById(R.id.btnChatSend)
+        btnChatToggle= v.findViewById(R.id.btnChatToggle)
 
         // Bind all letter keys
         for ((letter, resId) in letterIds) {
@@ -216,6 +240,17 @@ class KeyboardHawkIME : InputMethodService() {
         v.findViewById<View>(R.id.toolStop).setOnClickListener { stopTask() }
         v.findViewById<View>(R.id.toolMemory).setOnClickListener { togglePanel(Panel.MEMORY) }
         v.findViewById<View>(R.id.toolSettings).setOnClickListener { togglePanel(Panel.SETTINGS) }
+        v.findViewById<View>(R.id.toolChat).setOnClickListener { togglePanel(Panel.CHAT) }
+
+        // Chat panel
+        btnChatSend?.setOnClickListener { sendChatMessage() }
+        btnChatToggle?.setOnClickListener {
+            chatUseGroq = !chatUseGroq
+            btnChatToggle?.text = if (chatUseGroq) "GROQ" else "LLAMA"
+            btnChatToggle?.setTextColor(
+                android.graphics.Color.parseColor(if (chatUseGroq) "#00CCFF" else "#FF8800")
+            )
+        }
 
         // Memory panel controls
         panelMemory = v.findViewById(R.id.panelMemory)
@@ -381,12 +416,14 @@ class KeyboardHawkIME : InputMethodService() {
         panelDebug?.visibility    = View.GONE
         panelMemory?.visibility   = View.GONE
         panelSettings?.visibility = View.GONE
+        panelChat?.visibility     = View.GONE
         when (activePanel) {
             Panel.LOG       -> { panelLog?.visibility      = View.VISIBLE; scrollLogToBottom() }
             Panel.CLIPBOARD -> { panelClip?.visibility     = View.VISIBLE; refreshClipPanel() }
             Panel.DEBUG     -> { panelDebug?.visibility    = View.VISIBLE; scrollDebugToBottom() }
             Panel.MEMORY    -> { panelMemory?.visibility   = View.VISIBLE; refreshMemoryPanel() }
             Panel.SETTINGS  -> { panelSettings?.visibility = View.VISIBLE }
+            Panel.CHAT      -> { panelChat?.visibility     = View.VISIBLE }
             Panel.NONE      -> {}
         }
     }
@@ -597,6 +634,45 @@ class KeyboardHawkIME : InputMethodService() {
             debugInfo("CMD", "Stop requested by user")
         } else {
             updateStatus("Service not connected")
+        }
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    //  CHAT PANEL — talk directly to Groq or Llama
+    // ══════════════════════════════════════════════════════════════
+
+    private fun sendChatMessage() {
+        val svc = HawkAccessibilityService.instance
+        if (svc == null) {
+            addChatMessage("SYSTEM", "Accessibility Service not connected — enable it in Settings first.")
+            return
+        }
+        val msg = etChatInput?.text?.toString()?.trim() ?: ""
+        if (msg.isBlank()) return
+        val aiName = if (chatUseGroq) "GROQ" else "LLAMA"
+        addChatMessage("YOU", msg)
+        etChatInput?.setText("")
+        addChatMessage(aiName, "…thinking…")
+        svc.chatWithAI(msg, chatUseGroq) { reply ->
+            handler.post {
+                val current = tvChatLog?.text?.toString() ?: ""
+                val replaced = current.replace("$aiName: …thinking…", "")
+                tvChatLog?.text = replaced.trimEnd()
+                addChatMessage(aiName, reply ?: "(no response — check API key and network)")
+            }
+        }
+    }
+
+    private fun addChatMessage(who: String, text: String) {
+        handler.post {
+            val existing = tvChatLog?.text?.toString() ?: ""
+            val line = "$who: $text\n"
+            tvChatLog?.text = if (existing.isBlank()) line else "$existing$line"
+            // Auto-scroll
+            panelChat?.let { p ->
+                val sv = p.getChildAt(0) as? ScrollView
+                sv?.post { sv.fullScroll(View.FOCUS_DOWN) }
+            }
         }
     }
 
