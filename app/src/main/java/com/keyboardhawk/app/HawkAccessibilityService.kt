@@ -43,7 +43,7 @@ class HawkAccessibilityService : AccessibilityService() {
         const val MODEL_LOCAL = "local"
         const val MODEL_FAST = "llama-3.1-8b-instant"
         const val MODEL_SMART = "llama-3.3-70b-versatile"
-        var currentModel = MODEL_LOCAL
+        var currentModel = MODEL_FAST
         const val MAX_STEPS = 40
         const val STUCK_THRESHOLD = 3
         const val MAX_RETRIES = 3
@@ -56,9 +56,26 @@ class HawkAccessibilityService : AccessibilityService() {
         const val OVERLAY_TAG = "HawkOverlay"
     }
 
-    private fun getApiKey(): String =
-        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    private fun getApiKey(): String {
+        val stored = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .getString(PREF_GROQ_KEY, "") ?: ""
+        if (stored.isNotBlank()) return stored
+        // Fall back to key baked in at build time (from GitHub Actions secret)
+        val built = BuildConfig.GROQ_API_KEY
+        if (built.isNotBlank()) {
+            getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .edit().putString(PREF_GROQ_KEY, built).apply()
+        }
+        return built
+    }
+
+    // Direct chat call for the keyboard chat panel
+    fun chatWithAI(message: String, useGroq: Boolean, callback: (String?) -> Unit) {
+        val model = if (currentModel == MODEL_FAST || !useGroq) MODEL_FAST else MODEL_SMART
+        val url   = if (useGroq) GROQ_URL else "${getAiUrl()}/v1/chat/completions"
+        val sys   = "You are Keyboard Hawk AI assistant. Answer the user's question clearly and concisely."
+        callAI(url, model, useGroq, sys, message, 400, 0.7, callback)
+    }
 
     private val handler = Handler(Looper.getMainLooper())
     private val client = OkHttpClient.Builder()
