@@ -101,6 +101,7 @@ class KeyboardHawkIME : InputMethodService() {
     private var layoutNumbers: LinearLayout? = null
     private var panelSettings: LinearLayout? = null
     private var etApiKey: android.widget.EditText? = null
+    private var etLlamaUrl: android.widget.EditText? = null
     private var showingNumbers = false
 
     // Chat panel
@@ -203,6 +204,11 @@ class KeyboardHawkIME : InputMethodService() {
         }
         etApiKey?.setText(storedKey)
 
+        // Pre-fill Llama URL field from saved prefs
+        etLlamaUrl = rootView?.findViewById(R.id.etLlamaUrl)
+        val savedUrl = prefs.getString(HawkAccessibilityService.PREF_LLAMA_URL, "") ?: ""
+        etLlamaUrl?.setText(savedUrl)
+
         // Chat panel
         panelChat    = v.findViewById(R.id.panelChat)
         tvChatLog    = v.findViewById(R.id.tvChatLog)
@@ -264,6 +270,7 @@ class KeyboardHawkIME : InputMethodService() {
 
         // Settings panel
         v.findViewById<View>(R.id.btnSaveKey).setOnClickListener { saveApiKey() }
+        v.findViewById<View>(R.id.btnSaveLlamaUrl).setOnClickListener { saveLlamaUrl() }
 
         // CMD bar
         v.findViewById<View>(R.id.btnRun).setOnClickListener { runCommand() }
@@ -450,7 +457,18 @@ class KeyboardHawkIME : InputMethodService() {
         val key = etApiKey?.text?.toString()?.trim() ?: return
         getSharedPreferences(HawkAccessibilityService.PREFS_NAME, Context.MODE_PRIVATE)
             .edit().putString(HawkAccessibilityService.PREF_GROQ_KEY, key).apply()
-        updateStatus("API key saved ✓")
+        updateStatus("Groq API key saved ✓")
+        togglePanel(Panel.NONE)
+    }
+
+    private fun saveLlamaUrl() {
+        val raw  = etLlamaUrl?.text?.toString()?.trim() ?: return
+        val url  = raw.trimEnd('/')           // strip trailing slash
+        HawkAccessibilityService.instance?.updateAiUrl(url)
+        // Also persist directly in case service isn't connected yet
+        getSharedPreferences(HawkAccessibilityService.PREFS_NAME, Context.MODE_PRIVATE)
+            .edit().putString(HawkAccessibilityService.PREF_LLAMA_URL, url).apply()
+        updateStatus("Llama URL saved ✓ — $url")
         togglePanel(Panel.NONE)
     }
 
