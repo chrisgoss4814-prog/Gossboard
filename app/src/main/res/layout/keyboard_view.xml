@@ -225,6 +225,25 @@
                 android:fontFamily="monospace" />
         </LinearLayout>
 
+        <!-- Settings / API key -->
+        <LinearLayout
+            android:id="@+id/toolSettings"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@drawable/toolbar_item_bg"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="⚙" android:textColor="#AACCFF" android:textSize="14sp"
+                android:gravity="center" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="KEY" android:textColor="#4488AA" android:textSize="7sp"
+                android:fontFamily="monospace" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <!-- ══════════════════════════════════════════════════════
@@ -397,6 +416,65 @@
 
     </LinearLayout>
 
+    <!-- SETTINGS PANEL (API key entry) -->
+    <LinearLayout
+        android:id="@+id/panelSettings"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/panel_bg"
+        android:padding="10dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="GROQ API KEY"
+            android:textColor="#00AAFF"
+            android:textSize="9sp"
+            android:fontFamily="monospace"
+            android:paddingBottom="6dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="36dp">
+
+            <EditText
+                android:id="@+id/etApiKey"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="gsk_..."
+                android:textColorHint="#223350"
+                android:textColor="#AACCFF"
+                android:textSize="11sp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:background="@drawable/input_bg"
+                android:inputType="textVisiblePassword"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:fontFamily="monospace" />
+
+            <TextView
+                android:id="@+id/btnSaveKey"
+                android:layout_width="52dp"
+                android:layout_height="match_parent"
+                android:text="SAVE"
+                android:textColor="#00FF88"
+                android:textSize="9sp"
+                android:fontFamily="monospace"
+                android:gravity="center"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/key_action"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
     <!-- ══════════════════════════════════════════════════════
          COMMAND INPUT BAR (CMD mode only)
          ══════════════════════════════════════════════════════ -->
@@ -447,201 +525,349 @@
     </LinearLayout>
 
     <!-- ══════════════════════════════════════════════════════
-         QWERTY KEY ROWS
+         LETTER KEYS — QWERTY (shown by default)
          ══════════════════════════════════════════════════════ -->
-
-    <!-- Row 1: Q W E R T Y U I O P -->
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/layoutLetters"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:paddingStart="3dp"
-        android:paddingEnd="3dp"
-        android:paddingTop="2dp"
-        android:paddingBottom="1dp"
-        android:gravity="center_vertical">
+        android:layout_height="wrap_content">
 
-        <TextView android:id="@+id/kQ" style="@style/HawkKey" android:text="q" />
-        <TextView android:id="@+id/kW" style="@style/HawkKey" android:text="w" />
-        <TextView android:id="@+id/kE" style="@style/HawkKey" android:text="e" />
-        <TextView android:id="@+id/kR" style="@style/HawkKey" android:text="r" />
-        <TextView android:id="@+id/kT" style="@style/HawkKey" android:text="t" />
-        <TextView android:id="@+id/kY" style="@style/HawkKey" android:text="y" />
-        <TextView android:id="@+id/kU" style="@style/HawkKey" android:text="u" />
-        <TextView android:id="@+id/kI" style="@style/HawkKey" android:text="i" />
-        <TextView android:id="@+id/kO" style="@style/HawkKey" android:text="o" />
-        <TextView android:id="@+id/kP" style="@style/HawkKey" android:text="p" />
+        <!-- Row 1: Q W E R T Y U I O P -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="1dp"
+            android:gravity="center_vertical">
+            <TextView android:id="@+id/kQ" style="@style/HawkKey" android:text="q" />
+            <TextView android:id="@+id/kW" style="@style/HawkKey" android:text="w" />
+            <TextView android:id="@+id/kE" style="@style/HawkKey" android:text="e" />
+            <TextView android:id="@+id/kR" style="@style/HawkKey" android:text="r" />
+            <TextView android:id="@+id/kT" style="@style/HawkKey" android:text="t" />
+            <TextView android:id="@+id/kY" style="@style/HawkKey" android:text="y" />
+            <TextView android:id="@+id/kU" style="@style/HawkKey" android:text="u" />
+            <TextView android:id="@+id/kI" style="@style/HawkKey" android:text="i" />
+            <TextView android:id="@+id/kO" style="@style/HawkKey" android:text="o" />
+            <TextView android:id="@+id/kP" style="@style/HawkKey" android:text="p" />
+        </LinearLayout>
+
+        <!-- Row 2: A S D F G H J K L -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
+            android:gravity="center_vertical">
+            <TextView android:id="@+id/kA" style="@style/HawkKey" android:text="a" />
+            <TextView android:id="@+id/kS" style="@style/HawkKey" android:text="s" />
+            <TextView android:id="@+id/kD" style="@style/HawkKey" android:text="d" />
+            <TextView android:id="@+id/kF" style="@style/HawkKey" android:text="f" />
+            <TextView android:id="@+id/kG" style="@style/HawkKey" android:text="g" />
+            <TextView android:id="@+id/kH" style="@style/HawkKey" android:text="h" />
+            <TextView android:id="@+id/kJ" style="@style/HawkKey" android:text="j" />
+            <TextView android:id="@+id/kK" style="@style/HawkKey" android:text="k" />
+            <TextView android:id="@+id/kL" style="@style/HawkKey" android:text="l" />
+        </LinearLayout>
+
+        <!-- Row 3: CAPS  Z X C V B N M  DEL -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
+            android:gravity="center_vertical">
+            <TextView
+                android:id="@+id/kCaps"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.6"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:text="⇪"
+                android:textColor="#667788"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:background="@drawable/key_special"
+                android:clickable="true"
+                android:focusable="true" />
+            <TextView android:id="@+id/kZ" style="@style/HawkKey" android:text="z" />
+            <TextView android:id="@+id/kX" style="@style/HawkKey" android:text="x" />
+            <TextView android:id="@+id/kC" style="@style/HawkKey" android:text="c" />
+            <TextView android:id="@+id/kV" style="@style/HawkKey" android:text="v" />
+            <TextView android:id="@+id/kB" style="@style/HawkKey" android:text="b" />
+            <TextView android:id="@+id/kN" style="@style/HawkKey" android:text="n" />
+            <TextView android:id="@+id/kM" style="@style/HawkKey" android:text="m" />
+            <TextView
+                android:id="@+id/kDel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.6"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:text="⌫"
+                android:textColor="#AA4444"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:background="@drawable/key_special"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <!-- Row 4: ?123  ,  SPACE  .  ⏎ -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="3dp"
+            android:gravity="center_vertical">
+            <TextView
+                android:id="@+id/kNumToggle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.6"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:text="?123"
+                android:textColor="#44BBDD"
+                android:textSize="10sp"
+                android:fontFamily="monospace"
+                android:gravity="center"
+                android:background="@drawable/key_special"
+                android:clickable="true"
+                android:focusable="true" />
+            <TextView
+                android:id="@+id/kComma"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:text=","
+                android:textColor="#8899AA"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:background="@drawable/key_normal"
+                android:clickable="true"
+                android:focusable="true" />
+            <TextView
+                android:id="@+id/kSpace"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:text="SPACE"
+                android:textColor="#3A4A60"
+                android:textSize="10sp"
+                android:fontFamily="monospace"
+                android:gravity="center"
+                android:background="@drawable/key_normal"
+                android:clickable="true"
+                android:focusable="true" />
+            <TextView
+                android:id="@+id/kPeriod"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:text="."
+                android:textColor="#8899AA"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:background="@drawable/key_normal"
+                android:clickable="true"
+                android:focusable="true" />
+            <TextView
+                android:id="@+id/kEnter"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.8"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:text="⏎"
+                android:textColor="#00FF88"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:background="@drawable/key_action"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
 
     </LinearLayout>
 
-    <!-- Row 2: A S D F G H J K L -->
+    <!-- ══════════════════════════════════════════════════════
+         NUMBER / SYMBOL KEYS (hidden — shown when ?123 tapped)
+         ══════════════════════════════════════════════════════ -->
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/layoutNumbers"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:paddingStart="14dp"
-        android:paddingEnd="14dp"
-        android:paddingTop="1dp"
-        android:paddingBottom="1dp"
-        android:gravity="center_vertical">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
-        <TextView android:id="@+id/kA" style="@style/HawkKey" android:text="a" />
-        <TextView android:id="@+id/kS" style="@style/HawkKey" android:text="s" />
-        <TextView android:id="@+id/kD" style="@style/HawkKey" android:text="d" />
-        <TextView android:id="@+id/kF" style="@style/HawkKey" android:text="f" />
-        <TextView android:id="@+id/kG" style="@style/HawkKey" android:text="g" />
-        <TextView android:id="@+id/kH" style="@style/HawkKey" android:text="h" />
-        <TextView android:id="@+id/kJ" style="@style/HawkKey" android:text="j" />
-        <TextView android:id="@+id/kK" style="@style/HawkKey" android:text="k" />
-        <TextView android:id="@+id/kL" style="@style/HawkKey" android:text="l" />
+        <!-- Row 1: 1 2 3 4 5 6 7 8 9 0 -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="1dp"
+            android:gravity="center_vertical">
+            <TextView style="@style/HawkKey" android:text="1" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="2" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="3" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="4" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="5" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="6" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="7" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="8" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="9" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="0" android:tag="numkey" />
+        </LinearLayout>
 
-    </LinearLayout>
+        <!-- Row 2: ! @ # $ % &amp; * - + = -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
+            android:gravity="center_vertical">
+            <TextView style="@style/HawkKey" android:text="!" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="@" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="#" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="$" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="%" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="&amp;" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="*" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="-" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="+" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="=" android:tag="numkey" />
+        </LinearLayout>
 
-    <!-- Row 3: CAPS  Z X C V B N M  DEL -->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:paddingStart="3dp"
-        android:paddingEnd="3dp"
-        android:paddingTop="1dp"
-        android:paddingBottom="1dp"
-        android:gravity="center_vertical">
+        <!-- Row 3: ( ) _ / : ; ' " ? \ -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
+            android:gravity="center_vertical">
+            <TextView style="@style/HawkKey" android:text="(" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text=")" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="_" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="/" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text=":" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text=";" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="&apos;" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="&quot;" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="?" android:tag="numkey" />
+            <TextView style="@style/HawkKey" android:text="\\" android:tag="numkey" />
+        </LinearLayout>
 
-        <!-- CAPS LOCK -->
-        <TextView
-            android:id="@+id/kCaps"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1.6"
-            android:layout_marginStart="2dp"
-            android:layout_marginEnd="2dp"
-            android:text="⇪"
-            android:textColor="#667788"
-            android:textSize="14sp"
-            android:gravity="center"
-            android:background="@drawable/key_special"
-            android:clickable="true"
-            android:focusable="true" />
-
-        <TextView android:id="@+id/kZ" style="@style/HawkKey" android:text="z" />
-        <TextView android:id="@+id/kX" style="@style/HawkKey" android:text="x" />
-        <TextView android:id="@+id/kC" style="@style/HawkKey" android:text="c" />
-        <TextView android:id="@+id/kV" style="@style/HawkKey" android:text="v" />
-        <TextView android:id="@+id/kB" style="@style/HawkKey" android:text="b" />
-        <TextView android:id="@+id/kN" style="@style/HawkKey" android:text="n" />
-        <TextView android:id="@+id/kM" style="@style/HawkKey" android:text="m" />
-
-        <!-- DEL -->
-        <TextView
-            android:id="@+id/kDel"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1.6"
-            android:layout_marginStart="2dp"
-            android:layout_marginEnd="2dp"
-            android:text="⌫"
-            android:textColor="#AA4444"
-            android:textSize="14sp"
-            android:gravity="center"
-            android:background="@drawable/key_special"
-            android:clickable="true"
-            android:focusable="true" />
-
-    </LinearLayout>
-
-    <!-- Row 4: ?123  SPACE  .  SEND -->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="42dp"
-        android:paddingStart="3dp"
-        android:paddingEnd="3dp"
-        android:paddingTop="1dp"
-        android:paddingBottom="3dp"
-        android:gravity="center_vertical">
-
-        <!-- MEM key — tap opens memory panel, long-press to add memory -->
-        <TextView
-            android:id="@+id/kMemo"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:layout_marginStart="2dp"
-            android:layout_marginEnd="2dp"
-            android:text="MEM"
-            android:textColor="#44BBDD"
-            android:textSize="8sp"
-            android:fontFamily="monospace"
-            android:gravity="center"
-            android:background="@drawable/key_special"
-            android:clickable="true"
-            android:focusable="true" />
-
-        <!-- Comma -->
-        <TextView
-            android:id="@+id/kComma"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.8"
-            android:layout_marginStart="2dp"
-            android:layout_marginEnd="2dp"
-            android:text=","
-            android:textColor="#8899AA"
-            android:textSize="14sp"
-            android:gravity="center"
-            android:background="@drawable/key_normal"
-            android:clickable="true"
-            android:focusable="true" />
-
-        <!-- SPACE -->
-        <TextView
-            android:id="@+id/kSpace"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:layout_marginStart="2dp"
-            android:layout_marginEnd="2dp"
-            android:text="SPACE"
-            android:textColor="#3A4A60"
-            android:textSize="9sp"
-            android:fontFamily="monospace"
-            android:gravity="center"
-            android:background="@drawable/key_normal"
-            android:clickable="true"
-            android:focusable="true" />
-
-        <!-- Period -->
-        <TextView
-            android:id="@+id/kPeriod"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.8"
-            android:layout_marginStart="2dp"
-            android:layout_marginEnd="2dp"
-            android:text="."
-            android:textColor="#8899AA"
-            android:textSize="14sp"
-            android:gravity="center"
-            android:background="@drawable/key_normal"
-            android:clickable="true"
-            android:focusable="true" />
-
-        <!-- ENTER / SEND -->
-        <TextView
-            android:id="@+id/kEnter"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1.8"
-            android:layout_marginStart="2dp"
-            android:layout_marginEnd="2dp"
-            android:text="⏎"
-            android:textColor="#00FF88"
-            android:textSize="14sp"
-            android:gravity="center"
-            android:background="@drawable/key_action"
-            android:clickable="true"
-            android:focusable="true" />
+        <!-- Row 4: ABC  ,  SPACE  .  ⏎ -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="3dp"
+            android:gravity="center_vertical">
+            <TextView
+                android:id="@+id/kLetterToggle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.6"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:text="ABC"
+                android:textColor="#44BBDD"
+                android:textSize="10sp"
+                android:fontFamily="monospace"
+                android:gravity="center"
+                android:background="@drawable/key_special"
+                android:clickable="true"
+                android:focusable="true" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:text=","
+                android:textColor="#8899AA"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:background="@drawable/key_normal"
+                android:tag="numkey"
+                android:clickable="true"
+                android:focusable="true" />
+            <TextView
+                android:id="@+id/kNSpace"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:text="SPACE"
+                android:textColor="#3A4A60"
+                android:textSize="10sp"
+                android:fontFamily="monospace"
+                android:gravity="center"
+                android:background="@drawable/key_normal"
+                android:clickable="true"
+                android:focusable="true" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:text="."
+                android:textColor="#8899AA"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:background="@drawable/key_normal"
+                android:tag="numkey"
+                android:clickable="true"
+                android:focusable="true" />
+            <TextView
+                android:id="@+id/kNEnter"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.8"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:text="⏎"
+                android:textColor="#00FF88"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:background="@drawable/key_action"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
 
     </LinearLayout>
 
