@@ -244,6 +244,24 @@
                 android:fontFamily="monospace" />
         </LinearLayout>
 
+        <!-- Chat with AI -->
+        <LinearLayout
+            android:id="@+id/toolChat"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@drawable/toolbar_item_bg"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="💬" android:textSize="13sp" android:gravity="center" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="CHAT" android:textColor="#00CCFF" android:textSize="7sp"
+                android:fontFamily="monospace" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <!-- ══════════════════════════════════════════════════════
@@ -467,6 +485,107 @@
                 android:fontFamily="monospace"
                 android:gravity="center"
                 android:layout_marginStart="6dp"
+                android:background="@drawable/key_action"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- CHAT PANEL — talk directly to Groq or Llama -->
+    <LinearLayout
+        android:id="@+id/panelChat"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:background="@drawable/panel_bg"
+        android:visibility="gone"
+        android:padding="4dp">
+
+        <!-- Header row: title + AI toggle + copy -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:gravity="center_vertical"
+            android:background="#030508"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp">
+
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="AI CHAT" android:textColor="#334466"
+                android:textSize="7sp" android:fontFamily="monospace" />
+
+            <TextView
+                android:id="@+id/btnChatToggle"
+                android:layout_width="40dp"
+                android:layout_height="18dp"
+                android:text="GROQ"
+                android:textColor="#00CCFF"
+                android:textSize="7sp"
+                android:fontFamily="monospace"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:background="@drawable/key_special"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_marginEnd="4dp" />
+
+        </LinearLayout>
+
+        <!-- Chat log -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="2dp">
+            <TextView
+                android:id="@+id/tvChatLog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#4A7A9B"
+                android:textSize="8.5sp"
+                android:fontFamily="monospace"
+                android:padding="4dp"
+                android:text="Ask Groq or Llama anything…" />
+        </ScrollView>
+
+        <!-- Input row -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="26dp"
+            android:layout_marginTop="2dp"
+            android:gravity="center_vertical">
+
+            <EditText
+                android:id="@+id/etChatInput"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="Ask the AI…"
+                android:textColorHint="#1A3344"
+                android:textColor="#AACCFF"
+                android:textSize="9sp"
+                android:fontFamily="monospace"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:background="@drawable/input_bg"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/btnChatSend"
+                android:layout_width="36dp"
+                android:layout_height="match_parent"
+                android:text="▶"
+                android:textColor="#00FF88"
+                android:textSize="13sp"
+                android:gravity="center"
+                android:layout_marginStart="3dp"
                 android:background="@drawable/key_action"
                 android:clickable="true"
                 android:focusable="true" />
