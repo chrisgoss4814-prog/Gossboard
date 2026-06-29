@@ -566,9 +566,10 @@ class HawkAccessibilityService : AccessibilityService() {
                 }
             }
 
+            val execLabel = if (currentModel != MODEL_LOCAL) "Groq ▶" else "Llama ▶"
             handler.post {
-                KeyboardHawkIME.instance?.updateStatus("$status — Llama ▶")
-                updateOverlay("Llama ▶", step, MAX_STEPS)
+                KeyboardHawkIME.instance?.updateStatus("$status — $execLabel")
+                updateOverlay("$execLabel", step, MAX_STEPS)
             }
 
             // EXECUTE: Llama picks the next action
@@ -803,7 +804,7 @@ SELF-KNOWLEDGE:
         callAI(GROQ_URL, model, true, systemPrompt, "Proceed.", maxTokens, 0.3, callback)
     }
 
-    // Llama call — returns a parsed action JSONObject (on main thread)
+    // Action executor — uses Groq when model is FAST/SMART, Llama when LOCAL
     private fun callLlamaForAction(
         systemPrompt: String,
         screenJson: String,
@@ -811,17 +812,15 @@ SELF-KNOWLEDGE:
         callback: (JSONObject) -> Unit
     ) {
         val userContent = "Step $step. Screen:\n${screenJson.take(3500)}"
-        callAI(
-            "${getAiUrl()}/v1/chat/completions",
-            "llama-3.1-8b-instruct",
-            false,
-            systemPrompt,
-            userContent,
-            80,
-            0.05
-        ) { content ->
+        val useGroqExec = currentModel != MODEL_LOCAL
+        val execUrl     = if (useGroqExec) GROQ_URL else "${getAiUrl()}/v1/chat/completions"
+        val execModel   = if (useGroqExec)
+                              if (currentModel == MODEL_FAST) MODEL_FAST else MODEL_SMART
+                          else "llama-3.1-8b-instruct"
+        val tokens      = if (useGroqExec) 150 else 80
+        callAI(execUrl, execModel, useGroqExec, systemPrompt, userContent, tokens, 0.05) { content ->
             val action = if (content != null) {
-                debug("LLAMA", content.take(100))
+                debug(if (useGroqExec) "GROQ-EX" else "LLAMA", content.take(120))
                 parseAction(content)
             } else {
                 JSONObject().put("action", "wait")
